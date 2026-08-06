@@ -9,5 +9,5 @@ services:
       - ${DUFS_PATH}:/data:rw
     command: >
       /data --allow-all
-      -a '${DUFS_USER}:${PASSWORD_HASH}/@/:rw'
+      -a '${DUFS_USER}:${PASSWORD_HASH}@/:rw'
 
