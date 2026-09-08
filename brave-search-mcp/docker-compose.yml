@@ -1,0 +1,26 @@
+services:
+  brave-search-mcp:
+    # Brave's own image, published by their release CI to Docker Hub.
+    # Tag scheme per release: vX.Y.Z, full commit SHA, short SHA.
+    image: 'brave/brave-search-mcp-server:${VERSION:-v2.1.3}'
+    container_name: brave-search-mcp
+    restart: unless-stopped
+    ports:
+      - '${BIND_HOST:-0.0.0.0}:${BRAVE_PORT:-8081}:8080'
+    environment:
+      # v2.x defaults to stdio. Without this the container starts fine but
+      # nothing ever listens on 8080 and the port mapping is inert.
+      - BRAVE_MCP_TRANSPORT=http
+      - BRAVE_MCP_HOST=0.0.0.0
+      - BRAVE_MCP_PORT=8080
+      - BRAVE_API_KEY=${BRAVE_API_KEY}
+      - BRAVE_MCP_LOG_LEVEL=${BRAVE_MCP_LOG_LEVEL:-info}
+      - BRAVE_MCP_STATELESS=${BRAVE_MCP_STATELESS:-true}
+    # Hardening flags taken from Brave's own documented docker run invocation.
+    cap_drop:
+      - ALL
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp
