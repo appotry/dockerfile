@@ -1,0 +1,20 @@
+services:
+  executor:
+    image: 'ghcr.io/usefulsoftwareco/executor-selfhost:${VERSION:-latest}'
+    container_name: executor
+    restart: unless-stopped
+    # Executor holds every API credential you give it, so bind to loopback by
+    # default. Set BIND_HOST=0.0.0.0 only behind a reverse proxy with auth/TLS.
+    ports:
+      - '${BIND_HOST:-127.0.0.1}:${EXECUTOR_PORT:-4788}:4788'
+    # Long syntax so a missing .env does not break `docker compose up`.
+    # Only uncommented lines in .env are passed into the container.
+    env_file:
+      - path: .env
+        required: false
+    # libSQL (SQLite) database + generated session key live here.
+    # This directory is the whole backup surface.
+    volumes:
+      - '${EXECUTOR_DATA_PATH:-./data}:/data'
+    # The image ships its own HEALTHCHECK against /api/health.
+    # It is distroless (no shell), so any override must use exec-form CMD.

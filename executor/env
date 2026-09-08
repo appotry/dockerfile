@@ -1,0 +1,48 @@
+# Copy to .env and uncomment what you need.
+# A bare `docker compose up -d` boots a working instance with zero config and
+# walks you through creating the admin account in the browser.
+
+# --- Compose-level settings ---------------------------------------------------
+VERSION=latest
+EXECUTOR_PORT=4788
+# 127.0.0.1 keeps it local-only. Use 0.0.0.0 only behind a reverse proxy.
+BIND_HOST=127.0.0.1
+EXECUTOR_DATA_PATH=./data
+
+# --- Public URL ---------------------------------------------------------------
+# MUST exactly match the address you load in the browser (scheme + host + port),
+# or browser logins are rejected. Behind a reverse proxy / TLS, set the public
+# https URL here.
+# EXECUTOR_WEB_BASE_URL=https://executor.example.com
+
+# Additional browser origins allowed to authenticate, comma-separated. These
+# aliases do not change OAuth callbacks or generated links, which stay pinned to
+# EXECUTOR_WEB_BASE_URL. Exact origins only.
+# EXECUTOR_TRUSTED_ORIGINS=http://executor.home.arpa:4788,http://192.0.2.10:4788
+
+# --- Session secret -----------------------------------------------------------
+# Generated and persisted under the data volume on first boot if unset. Set it
+# yourself to manage rotation (at least 32 characters). Rotating signs everyone
+# out. Generate with: openssl rand -hex 32
+# BETTER_AUTH_SECRET=
+
+# --- Headless bootstrap admin (CI / infra-as-code) ----------------------------
+# Set BOTH to pre-create the admin instead of the in-browser first-run setup.
+# Leave unset for the browser setup flow, which is recommended for most deploys.
+# EXECUTOR_BOOTSTRAP_ADMIN_EMAIL=you@example.com
+# EXECUTOR_BOOTSTRAP_ADMIN_PASSWORD=change-me-to-something-strong
+# EXECUTOR_BOOTSTRAP_ADMIN_NAME=Admin
+
+# --- Organization -------------------------------------------------------------
+# EXECUTOR_ORG_NAME=Default
+# EXECUTOR_ORG_SLUG=default
+
+# --- Sandbox network ----------------------------------------------------------
+# Allow sandboxed code to reach loopback/private network addresses. Off by
+# default: generated code should not be able to reach your LAN.
+# EXECUTOR_ALLOW_LOCAL_NETWORK=false
+
+# --- Local stdio MCP (trusted deployments only) -------------------------------
+# Disabled unless set to the exact string "true". Enabling it lets users
+# configure MCP servers whose commands execute on this host.
+# EXECUTOR_ALLOW_STDIO_MCP=true
